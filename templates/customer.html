@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block body %}
+  <h1>
+    Hello, {{ user.first_name }} <br>
+
+    This is the customer page <br>
+    
+  </h1>
+
+  <table style="width:100%">
+    <tr>
+      <th>Date</th>
+      <th>Estimate</th>
+      <th>Cleaner</th>
+      <th>Status</th>
+    </tr>
+
+
+    {% for job in user.customer_jobs %}
+    <tr>
+      <th>{{ job.start_time }}</th>
+      <th>$100</th>
+      <th> 
+        {% for employee in job.employees %}
+          {{ employee.first_name }}
+        {% endfor %} 
+      </th>
+      <th>Confirmed</th>
+    </tr>
+    {% endfor %}
+  
+  </table>
+
+
+
+
+{% endblock %}
