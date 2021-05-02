@@ -12,27 +12,35 @@
     <tr>
       <th>Date</th>
       <th>Estimate</th>
-      <th>Cleaner</th>
+      <th>Cleaner(s)</th>
       <th>Status</th>
     </tr>
 
 
     {% for job in user.customer_jobs %}
+    <!-- figure out how to only surface jobs in the future -->
+    <!-- create current time variable in route, and pass it through as a variable-->
     <tr>
-      <th>{{ job.start_time }}</th>
-      <th>$100</th>
-      <th> 
+      <td>{{ job.start_time }}</td>
+      <td>$100</td>
+      <td> 
         {% for employee in job.employees %}
-          {{ employee.first_name }}
+          {% if loop.last %}
+            {{ employee.first_name }}
+          {% else %}
+            {{ employee.first_name }},
+          {% endif %}
         {% endfor %} 
-      </th>
-      <th>Confirmed</th>
+      </td>
+      <td>Confirmed</td>
     </tr>
     {% endfor %}
   
   </table>
 
 
+
+  <!-- next step: add list of jobs in the past. Then allow ability to rate jobs -->
 
 
 {% endblock %}
