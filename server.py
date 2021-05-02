@@ -1,11 +1,11 @@
 from flask import Flask, render_template, request, make_response, redirect, session, flash
 import crud
 from model import connect_to_db
+import os
 
 app = Flask(__name__)
 
-#To-do, create a secret.ssh file to save this info and do not check that into version control 
-app.secret_key = 'my_temporary_secret_key'
+app.secret_key = os.environ['FLASK_SECRET_KEY']
 
 @app.route('/')
 def hompage():

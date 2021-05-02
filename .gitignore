@@ -1,3 +1,5 @@
 env/
 project_planning/scrum_notes.txt
 __pycache__
+secrets.sh
+*.pyc
