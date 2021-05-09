@@ -1,11 +1,12 @@
-from flask import Flask, render_template, request, make_response, redirect, session, flash
+from flask import Flask, render_template, request, make_response, redirect, session, flash, send_file
 import crud
 from model import connect_to_db
 import os
+from secrets import flask_secret_key
+import invoice_generator
 
 app = Flask(__name__)
-
-app.secret_key = os.environ['FLASK_SECRET_KEY']
+app.secret_key = flask_secret_key
 
 @app.route('/')
 def hompage():
@@ -16,16 +17,17 @@ def hompage():
 @app.route('/handle-login', methods=['POST'])
 def handle_login():
   """Check accuracy of log in information and redirect accordingly """
-
   email = request.form['email']
   password = request.form['password']
 
   user = crud.get_user_by_email(email)
 
   if crud.is_correct_password(email, password):
+    if not user:
+      return redirect('/')
+
     session['user'] = user.user_id
 
-    print(user)
     if user.role == 'employee':
       session['role'] = 'employee'
       return redirect('/employee')
@@ -42,8 +44,29 @@ def handle_login():
     flash("You entered the wrong password.  Please try again")
     return redirect("/")
 
+@app.route('/create_account')
+def create_account():
+  return render_template('create_account.html')
+
+@app.route('/create_user', methods=['POST'])
+def create_user():
+  first_name = request.form['first_name']
+  last_name = request.form['last_name']
+  email = request.form['email']
+  password = request.form['password']
+  
+  crud.create_user(user_id=405, first_name=first_name, last_name=last_name, email=email, password=password, role='customer')
+  
+  user = crud.get_user_by_email(email)
+  session['user'] = user.user_id
+  session['role'] = 'customer'
+
+  return redirect('/customer')
+
+
 @app.route('/customer')
 def customer_login():
+
   if session['role'] != 'customer':
     return redirct('/')
   user = crud.get_user_by_id(session['user'])
@@ -61,6 +84,26 @@ def employee_login():
 
   return render_template('employee.html', user=user)
 
+
+@app.route('/download/<invoice_id>')
+def download_invoice(invoice_id):
+  
+  user_id = session.get('user')
+
+  if not user_id:
+    return redirect('/')
+
+  user = crud.get_user_by_id(user_id)
+  
+  crud.generate_invoices()
+  
+  return send_file(f'invoices/{user_id}/{invoice_id}.pdf')
+
+@app.route('/logout')
+def logout_user():
+    session.clear()
+
+    return redirect('/')
 
 if __name__ == '__main__':
     connect_to_db(app)

@@ -26,7 +26,6 @@ class User(db.Model):
                         nullable=False)
     role = db.Column(db.Text,
                         nullable=False)  
-
     def __repr__(self):
         return f'<User user_id={self.user_id} email={self.email}>'
 
@@ -78,6 +77,11 @@ class Job(db.Model):
     start_time = db.Column(db.DateTime,)
 
     end_time = db.Column(db.DateTime,)
+
+    job_type = db.Column(db.Text,
+                        nullable=False)
+
+    amount = db.Column(db.Integer)
 
     customer = db.relationship('User', foreign_keys=[customer_id], backref='customer_jobs')
 

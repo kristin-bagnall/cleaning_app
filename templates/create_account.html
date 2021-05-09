@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block body%}
+
+<form action="/create_user" method="POST">
+  <div>
+    <label>First Name:</label>
+    <input type="text" id='first_name' name="first_name" required>
+  </div> <br>
+  <div>
+    <label>Last Name:</label>
+    <input type="text" id='last_name' name="last_name" required>
+  </div> <br>
+  <div>
+    <label>Email:</label>
+    <input type="text" id='email' name="email" required>
+  </div> <br>
+  <div>
+    <label>Password:</label>
+    <input type="password" id="password" name="password" required>
+  </div>
+
+  <input type="submit" value="Create Account">
+
+</form>
+
+{% endblock %}

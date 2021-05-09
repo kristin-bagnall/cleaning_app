@@ -1,6 +1,10 @@
 """CRUD operations."""
 
 from model import db, User, Address, Job, Image, Invoice, Review, EmployeeJob, connect_to_db
+from datetime import date, timedelta
+import invoice_generator
+import os
+
 
 # User functions
 def create_user(user_id, first_name, last_name, email, password, role):
@@ -58,14 +62,16 @@ def create_address(address_id, customer_id, address_type, street, city, state, z
 
   return address
 
-def create_job(job_id, customer_id, address_id, start_time, end_time):
+def create_job(job_id, customer_id, address_id, start_time, end_time, job_type, amount):
   """Create and return a new job"""
 
   job = Job(job_id=job_id, 
             customer_id=customer_id,
             address_id=address_id, 
             start_time=start_time, 
-            end_time=end_time
+            end_time=end_time,
+            job_type=job_type,
+            amount=amount
             )
 
   db.session.add(job)
@@ -99,19 +105,49 @@ def create_image(image_id, job_id, creator_id, uploaded_at):
 
   return image
 
-def create_invoice(invoice_id, job_id, payment_method, is_paid):
-  """Create and return a new invoice"""
+def create_invoices():
+  """ Creates invoices for all jobs that do not have associated invoices """
+  existing_invoices = Invoice.query.all()
+  existing_jobs = Job.query.all()
 
-  invoice = Invoice(invoice_id=invoice_id, 
-                    job_id=job_id, 
-                    payment_method=payment_method, 
-                    is_paid=is_paid
-                    )
+  job_ids_with_invoices = []
 
-  db.session.add(invoice)
-  db.session.commit()
+  for invoice in existing_invoices:
+    job_ids_with_invoices.append(invoice.job_id)
 
-  return invoice
+  for job in existing_jobs:
+    if job.job_id not in job_ids_with_invoices:
+      invoice = Invoice(job_id=job.job_id)
+      db.session.add(invoice)
+      db.session.commit()
+
+def generate_invoices():
+  existing_invoices = Invoice.query.all()
+
+  for invoice in existing_invoices:
+    customer_id = invoice.job.customer.user_id
+    customer_first_name = invoice.job.customer.first_name
+    invoice_number = invoice.invoice_id
+    date = (invoice.job.start_time).date().isoformat()
+    due_date = (invoice.job.start_time.date() + timedelta(days=30)).isoformat()
+    item_name = invoice.job.job_type
+    item_cost = invoice.job.amount
+    
+    if not os.path.exists(f'invoices/{customer_id}'):
+      os.makedirs(f'invoices/{customer_id}')
+    
+    if not os.path.exists(f'invoices/{customer_id}/{invoice_number}.pdf'):
+      invoice = invoice_generator.InvoiceGenerator(
+                          to=customer_first_name, 
+                          number=invoice_number, 
+                          date=date,
+                          due_date=due_date,
+                          item_name=item_name,
+                          item_quantity=1,
+                          item_cost=item_cost)
+  
+      invoice.download(f'invoices/{customer_id}/{invoice_number}.pdf') 
+
 
 def create_review(review_id, job_id, customer_id, star_rating, review_text):
   """Create and return a new review"""

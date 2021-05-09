@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% block title %} Welcome, {{ user.first_name }}
+{% endblock %}
 
 {% block body %}
   <h1>
@@ -7,6 +9,7 @@
     This is the customer page <br>
     
   </h1>
+  <a class="btn btn-primary btn-sm" id='log-out' href="/">Log Out</a></td> 
 
   <table style="width:100%">
     <tr>
@@ -14,6 +17,7 @@
       <th>Estimate</th>
       <th>Cleaner(s)</th>
       <th>Status</th>
+      <th>Invoice</th>
     </tr>
 
 
@@ -33,6 +37,8 @@
         {% endfor %} 
       </td>
       <td>Confirmed</td>
+      <td><a class="btn btn-primary btn-sm" href="/download/{{job.invoices[0].invoice_id}}" target="_blank">click me</a></td> 
+      <!-- need to get this to work for different invoice ids -->
     </tr>
     {% endfor %}
   
