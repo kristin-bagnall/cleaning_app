@@ -11,42 +11,120 @@
   </h1>
   <a class="btn btn-primary btn-sm" id='log-out' href="/">Log Out</a></td> 
 
+  <h1>
+    Upcoming Cleans
+  </h1>
+
+  <div>
+    {{user.customer_jobs}}
+  </div>
   <table style="width:100%">
     <tr>
       <th>Date</th>
       <th>Estimate</th>
       <th>Cleaner(s)</th>
       <th>Status</th>
-      <th>Invoice</th>
+      <th>Invoice (Pending)</th>
     </tr>
-
-
     {% for job in user.customer_jobs %}
-    <!-- figure out how to only surface jobs in the future -->
-    <!-- create current time variable in route, and pass it through as a variable-->
-    <tr>
-      <td>{{ job.start_time }}</td>
-      <td>$100</td>
-      <td> 
-        {% for employee in job.employees %}
-          {% if loop.last %}
-            {{ employee.first_name }}
-          {% else %}
-            {{ employee.first_name }},
-          {% endif %}
-        {% endfor %} 
-      </td>
-      <td>Confirmed</td>
-      <td><a class="btn btn-primary btn-sm" href="/download/{{job.invoices[0].invoice_id}}" target="_blank">click me</a></td> 
-      <!-- need to get this to work for different invoice ids -->
-    </tr>
+      {% if job.start_time > date_now %}
+      
+        <tr>
+          <td>{{ job.start_time }}</td>
+          <td>$100</td>
+          <td> 
+            {% for employee in job.employees %}
+              {% if loop.last %}
+                {{ employee.first_name }}
+              {% else %}
+                {{ employee.first_name }},
+              {% endif %}
+            {% endfor %} 
+          </td>
+          <td>Confirmed</td>
+          <td><a class="btn btn-primary btn-sm" href="/download/{{job.invoices[0].invoice_id}}" target="_blank">click me</a></td> 
+        </tr>
+      {% endif %}
     {% endfor %}
   
   </table>
 
 
+  <h1>
+    Past Cleans
+  </h1>
 
-  <!-- next step: add list of jobs in the past. Then allow ability to rate jobs -->
+  <table style="width:100%">
+    <tr>
+      <th>Date</th>
+      <th>Total Cost</th>
+      <th>Cleaner(s)</th>
+      <th>Review</th>
+      <th>Invoice</th>
+    </tr>
+
+    {% for job in user.customer_jobs %}
+      {% if job.start_time <= date_now %}
+      
+        <tr>
+          <td>{{ job.start_time }}</td>
+          <td>$100</td>
+          <td> 
+            {% for employee in job.employees %}
+              {% if loop.last %}
+                {{ employee.first_name }}
+              {% else %}
+                {{ employee.first_name }},
+              {% endif %}
+            {% endfor %} 
+          </td>
+          <td>
+            <div>
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#reviewModal" 
+                      data-user_first_name={{ user.first_name }} data-job_id={{ job.job_id }}>Review</button>
+              </div>
+          </td>
+          <td><a class="btn btn-primary btn-sm" href="/download/{{job.invoices[0].invoice_id}}" target="_blank">click me</a></td> 
+        </tr>
+      {% endif %}
+    {% endfor %}
+  
+  </table>
+
+  <div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="reviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="reviewModalLabel">Leave a Review</h5>
+        </div>
+        <div class="modal-body">
+          <form action="/create_rating" method="POST" id="feedbackForm"> Choose your Rating:
+            <div class="form-group">
+              <select name="star_rating">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="review_text" class="col-form-label">Tell Us More!</label>
+              <textarea class="form-control" name="review_text" ></textarea>
+              <input type="hidden" name="job_id" id="modal_job_id" value="">
+            </div>
+          
+            <button type="submit" class="btn btn-primary" >Submit Feedback</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+
+
+</div>
 
 
 {% endblock %}

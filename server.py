@@ -4,6 +4,7 @@ from model import connect_to_db
 import os
 from secrets import flask_secret_key
 import invoice_generator
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = flask_secret_key
@@ -70,8 +71,10 @@ def customer_login():
   if session['role'] != 'customer':
     return redirct('/')
   user = crud.get_user_by_id(session['user'])
+
+  date_now = datetime.now()
   
-  return render_template('customer.html', user=user)
+  return render_template('customer.html', user=user, date_now=date_now)
 
 
 @app.route('/employee')
@@ -104,6 +107,21 @@ def logout_user():
     session.clear()
 
     return redirect('/')
+
+
+@app.route('/create_rating', methods=['POST'])
+def create_rating():
+  print('*******')
+  print(request.form['job_id'])
+  print('*******')
+  customer_id = session.get('user')
+  job_id = request.form['job_id']
+  star_rating = request.form['star_rating']
+  review_text = request.form['review_text']
+
+  crud.create_review(job_id, customer_id, star_rating, review_text)
+
+  return redirect('/customer')
 
 if __name__ == '__main__':
     connect_to_db(app)

@@ -34,7 +34,12 @@ def create_employee_job():
   crud.create_employee_job(3, 2)
   crud.create_employee_job(3, 3)
   crud.create_employee_job(5, 4)
-  crud.create_employee_job(4, 4)
+  crud.create_employee_job(4, 5)
+  crud.create_employee_job(3, 6)
+  crud.create_employee_job(4, 6)
+  crud.create_employee_job(5, 6)
+  crud.create_employee_job(3, 7)
+  crud.create_employee_job(3, 8)
 
 def create_job():
   crud.create_job(1,1,1,'2021-07-01 12:00:00','2021-07-01 01:00:00','Standard Clean', 100)
@@ -43,6 +48,10 @@ def create_job():
 
   crud.create_job(4,2,3,'2021-07-12 2:30:00','2021-07-12 5:00:00','Standard Clean', 150)
   crud.create_job(5,2,3,'2021-07-18 2:30:00','2021-07-18 5:00:00','Standard Clean', 150)
+
+  crud.create_job(6,1,1,'2021-04-01 12:00:00','2021-04-01 01:00:00','Standard Clean', 100)
+  crud.create_job(7,1,1,'2021-05-01 12:00:00','2021-05-01 01:00:00','Standard Clean', 100)
+  crud.create_job(8,1,2,'2021-05-15 12:00:00','2021-05-15 01:00:00','Vacation Home Clean', 200)
 
 
 create_fake_users()

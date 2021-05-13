@@ -1,1 +1,5 @@
 /* style sheet here */
+
+.checked {
+  color: orange;
+}

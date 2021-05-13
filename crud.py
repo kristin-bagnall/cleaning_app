@@ -149,11 +149,10 @@ def generate_invoices():
       invoice.download(f'invoices/{customer_id}/{invoice_number}.pdf') 
 
 
-def create_review(review_id, job_id, customer_id, star_rating, review_text):
+def create_review(job_id, customer_id, star_rating, review_text):
   """Create and return a new review"""
 
-  review = Review(review_id=review_id, 
-                  job_id=job_id, 
+  review = Review(job_id=job_id, 
                   customer_id=customer_id, 
                   star_rating=star_rating, 
                   review_text=review_text

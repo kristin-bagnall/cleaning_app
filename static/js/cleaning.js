@@ -1,23 +1,19 @@
 "use strict";
 
-const logOut = document.getElementById('log-out');
+// customer portal log out functionality
+const logOut = $('#log-out')
 
-logOut.addEventListener('click', () =>{
+logOut.on('click', () =>{
   fetch(`/logout`)
 })
 
 
-
-// get_human_form.addEventListener('submit', (evt) => {
-//   evt.preventDefault();
-
-//   const human_id = document.querySelector('#human-id').value;
-
-//   fetch(`/api/human/${human_id}`)
-//   .then(response => response.json())
-//   .then(data => {
-//     document.querySelector('#fname').innerText = data.fname; 
-//     document.querySelector('#lname').innerText = data.lname; 
-//     document.querySelector('#email').innerText = data.email; 
-//   });
-// });
+$('#reviewModal').on('show.bs.modal', (event) => {
+  const modal = $('#reviewModal');
+  const button = $(event.relatedTarget); // Button that triggered the modal
+  const user_first_name = button.data('user_first_name');
+  const job_id = button.data('job_id');
+  
+  modal.find('.modal-title').text(user_first_name + ', we appreciate your feedback');
+  $('#modal_job_id').val(job_id);
+});
