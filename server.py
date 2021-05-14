@@ -12,7 +12,13 @@ app.secret_key = flask_secret_key
 @app.route('/')
 def hompage():
   """Returns rendered homepage """
-  return render_template('homepage.html');
+  return render_template('index.html');
+
+@app.route('/login')
+def login():
+  """Returns rendered login page"""
+
+  return render_template('login.html');
 
 
 @app.route('/handle-login', methods=['POST'])
@@ -111,9 +117,6 @@ def logout_user():
 
 @app.route('/create_rating', methods=['POST'])
 def create_rating():
-  print('*******')
-  print(request.form['job_id'])
-  print('*******')
   customer_id = session.get('user')
   job_id = request.form['job_id']
   star_rating = request.form['star_rating']
