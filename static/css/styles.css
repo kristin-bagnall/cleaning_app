@@ -10369,3 +10369,21 @@ body {
 .footer {
   padding: 5rem 0;
 }
+
+.bg-login-image {
+  background: url("../assets/img/login2.jpg");
+  background-position: center;
+  background-size: cover;
+}
+
+.bg-register-image {
+  background: url("../assets/img/login.jpg");
+  background-position: center;
+  background-size: cover;
+}
+
+.bg-password-image {
+  background: url("../assets/img/login.jpg");
+  background-position: center;
+  background-size: cover;
+}
