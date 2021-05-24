@@ -1,11 +1,23 @@
+/* Always set the map height explicitly to define the size of the div
+* element that contains the map. */
+#service-area-map {
+  height: 100%;
+}
 
+/* Optional: Makes the sample page fill the window. */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
 
 
 
 .checked {
   color: orange;
 }
-
+/* 
 /* Bootstrap Theme */
 @charset "UTF-8";
 
@@ -10138,7 +10150,7 @@ h3 {
     color: inherit;
     border-color: #dee2e6;
   }
-}
+} */
 body {
   letter-spacing: 0.0625em;
 }
