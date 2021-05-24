@@ -9,6 +9,12 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key = flask_secret_key
 
+@app.route('/test')
+def test():
+  """Returns rendered testt page"""
+
+  return render_template('test.html');
+
 @app.route('/')
 def hompage():
   """Returns rendered homepage """
@@ -82,6 +88,13 @@ def customer_login():
   
   return render_template('customer.html', user=user, date_now=date_now)
 
+
+@app.route('/clean_request')
+def clean_request():
+  """ Renders clean request template """
+  user = crud.get_user_by_id(session['user'])
+
+  return render_template('clean_request.html', user=user)
 
 @app.route('/employee')
 def employee_login():
