@@ -1,7 +1,24 @@
 {% extends 'base.html' %}
 
-{% block body%}
 
+{% block navigation %}
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="loginNav">
+    <div class="container px-4 px-lg-5">
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="/customer">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/#signup">Contact</a></li>
+                <li class="nav-item"><a class="nav-link" href="/login">Existing Customer</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<br>
+<br>
+{% endblock %}
+
+
+{% block body%}
 
 <div class="container">
 

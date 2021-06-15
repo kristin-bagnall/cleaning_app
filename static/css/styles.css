@@ -12,8 +12,6 @@ body {
   padding: 0;
 }
 
-
-
 .checked {
   color: orange;
 }
@@ -492,6 +490,7 @@ mark,
   border: 1px solid #dee2e6;
   border-radius: 0.25rem;
   max-width: 100%;
+  width: auto;
   height: auto;
 }
 
@@ -4223,7 +4222,7 @@ input[type=button].btn-block {
 .navbar-expand-lg > .container-sm,
 .navbar-expand-lg > .container-md,
 .navbar-expand-lg > .container-lg,
-.navbar-expand-lg > .container-xl {
+.request_clean > .container-xl {
     padding-right: 0;
     padding-left: 0;
   }
@@ -7574,6 +7573,10 @@ button.bg-black:focus {
   box-shadow: none !important;
 }
 
+.w-15 {
+  width: 15% !important;
+}
+
 .w-25 {
   width: 25% !important;
 }
@@ -10154,6 +10157,17 @@ h3 {
 body {
   letter-spacing: 0.0625em;
 }
+#loginNav {
+  min-height: 2rem;
+  background-color: #fff;
+}
+
+#loginNav .nav-link {
+  transition: none;
+  padding: 1.5rem;
+  /* color: rgba(255, 255, 255, 0.5); */
+}
+
 
 #mainNav {
   min-height: 3.5rem;
@@ -10398,4 +10412,52 @@ body {
   background: url("../assets/img/login.jpg");
   background-position: center;
   background-size: cover;
+}
+
+
+.container-fluid {
+  background-image: url("../assets/img/lemons.jpg");
+  background-position: center;
+  background-size: cover;
+}
+
+/* Star Rating */
+*{
+  margin: 0;
+  padding: 0;
+}
+.rate {
+  float: left;
+  height: 46px;
+  padding: 0 10px;
+}
+.rate:not(:checked) > input {
+  position:absolute;
+  top:-9999px;
+}
+.rate:not(:checked) > label {
+  float:right;
+  width:1em;
+  overflow:hidden;
+  white-space:nowrap;
+  cursor:pointer;
+  font-size:30px;
+  color:#ccc;
+}
+.rate:not(:checked) > label:before {
+  content: '★ ';
+}
+.rate > input:checked ~ label {
+  color: #ffc700;    
+}
+.rate:not(:checked) > label:hover,
+.rate:not(:checked) > label:hover ~ label {
+  color: #deb217;  
+}
+.rate > input:checked + label:hover,
+.rate > input:checked + label:hover ~ label,
+.rate > input:checked ~ label:hover,
+.rate > input:checked ~ label:hover ~ label,
+.rate > label:hover ~ input:checked ~ label {
+  color: #c59b08;
 }

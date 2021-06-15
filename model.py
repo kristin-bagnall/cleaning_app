@@ -125,8 +125,10 @@ class Image(db.Model):
     job_id = db.Column(db.Integer,
                         db.ForeignKey('jobs.job_id'),
                         nullable=False)
-    creator_id = db.Column(db.Integer,
+    user_id = db.Column(db.Integer,
                             db.ForeignKey('users.user_id'),
+                            nullable=False)
+    image_url = db.Column(db.Text,
                             nullable=False)
     uploaded_at = db.Column(db.DateTime,
                             nullable=False)

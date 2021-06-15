@@ -5,13 +5,11 @@ from datetime import date, timedelta
 import invoice_generator
 import os
 
-
 # User functions
-def create_user(user_id, first_name, last_name, email, password, role):
+def create_user(first_name, last_name, email, password, role):
   """Create and return a new user"""
 
-  user = User(user_id=user_id, 
-              first_name=first_name, 
+  user = User(first_name=first_name, 
               last_name=last_name, 
               email=email, 
               password=password, 
@@ -45,11 +43,10 @@ def is_correct_password(email, password):
   return User.password == password
   
 # Address functions
-def create_address(address_id, customer_id, address_type, street, city, state, zip_code):
+def create_address(customer_id, address_type, street, city, state, zip_code):
   """Create and return a new address"""
 
-  address = Address(address_id=address_id, 
-                    customer_id=customer_id, 
+  address = Address(customer_id=customer_id, 
                     address_type=address_type, 
                     street=street, 
                     city=city, 
@@ -62,11 +59,10 @@ def create_address(address_id, customer_id, address_type, street, city, state, z
 
   return address
 
-def create_job(job_id, customer_id, address_id, start_time, end_time, job_type, amount):
+def create_job(customer_id, address_id, start_time, end_time, job_type, amount):
   """Create and return a new job"""
 
-  job = Job(job_id=job_id, 
-            customer_id=customer_id,
+  job = Job(customer_id=customer_id,
             address_id=address_id, 
             start_time=start_time, 
             end_time=end_time,
@@ -91,12 +87,12 @@ def create_employee_job(employee_id, job_id):
 
   return employee_job
   
-def create_image(image_id, job_id, creator_id, uploaded_at):
+def create_image(job_id, user_id, image_url, uploaded_at):
   """Create and return a new image"""
 
-  image = Image(image_id=image_id, 
-                job_id=job_id, 
-                creator_id=creator_id, 
+  image = Image(job_id=job_id, 
+                user_id=user_id, 
+                image_url=image_url,
                 uploaded_at=uploaded_at
                 )
 
@@ -164,6 +160,62 @@ def create_review(job_id, customer_id, star_rating, review_text):
   return review
 
 
+
+
+
+
+
+# FOR CRUD OPERATIONS
+def create_user_with_id(user_id, first_name, last_name, email, password, role):
+  """Create and return a new user"""
+
+  user = User(user_id=user_id, 
+              first_name=first_name, 
+              last_name=last_name, 
+              email=email, 
+              password=password, 
+              role=role
+              )
+
+  db.session.add(user)
+  db.session.commit()
+
+  return user
+
+def create_address_with_id(address_id, customer_id, address_type, street, city, state, zip_code):
+  """Create and return a new address"""
+
+  address = Address(address_id=address_id, 
+                    customer_id=customer_id, 
+                    address_type=address_type, 
+                    street=street, 
+                    city=city, 
+                    state=state, 
+                    zip_code=zip_code
+                    )
+
+  db.session.add(address)
+  db.session.commit()
+
+  return address
+
+def create_job_with_id(job_id, customer_id, address_id, start_time, end_time, job_type, amount):
+  """Create and return a new job"""
+
+  job = Job(job_id=job_id, 
+            customer_id=customer_id,
+            address_id=address_id, 
+            start_time=start_time, 
+            end_time=end_time,
+            job_type=job_type,
+            amount=amount
+            )
+
+  db.session.add(job)
+  db.session.commit()
+
+  return job
+  
 if __name__ == '__main__':
     from server import app
     connect_to_db(app)

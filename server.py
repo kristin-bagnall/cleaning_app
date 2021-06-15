@@ -2,9 +2,14 @@ from flask import Flask, render_template, request, make_response, redirect, sess
 import crud
 from model import connect_to_db
 import os
-from secrets import flask_secret_key
+from secrets import flask_secret_key, GOOGLE_API_KEY, ClOUDINARY_API_KEY, ClOUDINARY_API_SECRET, CLOUDINARY_CLOUD_NAME
 import invoice_generator
 from datetime import datetime
+import requests
+import json
+from math import cos, asin, sqrt, pi
+import cloudinary.uploader
+
 
 app = Flask(__name__)
 app.secret_key = flask_secret_key
@@ -23,6 +28,9 @@ def hompage():
 @app.route('/login')
 def login():
   """Returns rendered login page"""
+
+  if 'user' in session.keys():
+    return redirect('/customer')
 
   return render_template('login.html');
 
@@ -50,11 +58,11 @@ def handle_login():
       return redirect('/customer')
 
     else:
-      flash('Database error: Incorrect role type. Please reach out to support.')
+      flash('Database error: Incorrect role type. Please reach out to support.','warning')
 
 
   else:
-    flash("You entered the wrong password.  Please try again")
+    flash("You entered the wrong password.  Please try again", "error")
     return redirect("/")
 
 @app.route('/create_account')
@@ -80,21 +88,95 @@ def create_user():
 @app.route('/customer')
 def customer_login():
 
-  if session['role'] != 'customer':
-    return redirct('/')
-  user = crud.get_user_by_id(session['user'])
+  if 'role' not in session.keys() or session['role'] != 'customer':
+    return redirect('/')
+  user_id = session['user']
+  user = crud.get_user_by_id(user_id)
 
   date_now = datetime.now()
   
   return render_template('customer.html', user=user, date_now=date_now)
 
 
-@app.route('/clean_request')
-def clean_request():
+@app.route('/post-form-data', methods=['POST'])
+def cloudinary_upload():
+
+  user_id = session.get('user')
+
+  if not user_id:
+    return redirect('/')
+
+  job_id = request.form['job_id']
+
+  image = request.files['customer-image']
+  
+  result = cloudinary.uploader.upload(file=image,
+                                      api_key=ClOUDINARY_API_KEY,
+                                      api_secret=ClOUDINARY_API_SECRET,
+                                      cloud_name=CLOUDINARY_CLOUD_NAME)
+
+  crud.create_image(job_id=job_id, user_id=user_id, image_url=result['secure_url'], uploaded_at=datetime.now())
+
+  return redirect('/customer')
+
+
+@app.route('/request_clean')
+def request_clean():
   """ Renders clean request template """
+  if 'user' not in session.keys():
+    flash('Please log in to request clean','info')
+    return redirect('/login')
+  
   user = crud.get_user_by_id(session['user'])
 
-  return render_template('clean_request.html', user=user)
+  return render_template('request_clean.html', user=user)
+
+@app.route('/create_address')
+def create_address():
+  """ Renders create address template """
+  user = crud.get_user_by_id(session['user'])
+
+  return render_template('create_address.html', user=user)
+
+
+@app.route('/add_address', methods=['POST','GET'])
+def add_address():
+  """Checks to see if an address is in a served area and returns appropriate response """
+  customer_id = session.get('user')
+  address_type = request.form['address-type']
+  address = request.form['address']
+  city = request.form['city']
+  state = request.form['state']
+  zip_code = request.form['zip-code']
+  
+  # get lng/lat coordinates of address to compare to Bend lng/lat
+  params = {"key": GOOGLE_API_KEY, 
+          "address": f"{address} {city}, {state} {zip_code}"}
+
+  response = requests.get('https://maps.googleapis.com/maps/api/geocode/json', params)
+
+  if not response.json()['results']:
+    flash('Address is not valid. Please enter a new address.','error')
+    return redirect('/create_address')
+
+  request_lng = response.json()['results'][0]['geometry']['location']['lng']
+  request_lat = response.json()['results'][0]['geometry']['location']['lat']
+
+  def distance_from_bend_center(lat1, lon1, lat2=44.0581728, lon2=-121.3153096):
+      p = pi/180
+      a = 0.5 - cos((lat2-lat1)*p)/2 + cos(lat1*p) * cos(lat2*p) * (1-cos((lon2-lon1)*p))/2
+      return 12742 * asin(sqrt(a)) #2*R*asin...
+
+  distance = distance_from_bend_center(request_lat, request_lng)
+
+  if distance < 50:
+    crud.create_address(customer_id, address_type, address, city, state, zip_code)
+    flash('Address has been successfully added.','success')
+    return redirect('/request_clean')
+
+  else:
+    flash('Address is not currently in our service area. Please enter a new address.')
+    return redirect('/create_address')
 
 @app.route('/employee')
 def employee_login():
@@ -137,6 +219,7 @@ def create_rating():
 
   crud.create_review(job_id, customer_id, star_rating, review_text)
 
+  flash('Thank you for your review! We value your feedback.', 'success')
   return redirect('/customer')
 
 if __name__ == '__main__':

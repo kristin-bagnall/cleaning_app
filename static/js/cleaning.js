@@ -1,6 +1,6 @@
 "use strict";
 
-// Homepage
+// Navbar
 
 window.addEventListener('DOMContentLoaded', event => {
 
@@ -15,36 +15,10 @@ window.addEventListener('DOMContentLoaded', event => {
       } else {
           navbarCollapsible.classList.add('navbar-shrink')
       }
-
   };
-
-  // Shrink the navbar 
-  navbarShrink();
 
   // Shrink the navbar when page is scrolled
   document.addEventListener('scroll', navbarShrink);
-
-  // Activate Bootstrap scrollspy on the main nav element
-  const mainNav = document.body.querySelector('#mainNav');
-  if (mainNav) {
-      new bootstrap.ScrollSpy(document.body, {
-          target: '#mainNav',
-          offset: 74,
-      });
-  };
-
-  // Collapse responsive navbar when toggler is visible
-  const navbarToggler = document.body.querySelector('.navbar-toggler');
-  const responsiveNavItems = [].slice.call(
-      document.querySelectorAll('#navbarResponsive .nav-link')
-  );
-  responsiveNavItems.map(function (responsiveNavItem) {
-      responsiveNavItem.addEventListener('click', () => {
-          if (window.getComputedStyle(navbarToggler).display !== 'none') {
-              navbarToggler.click();
-          }
-      });
-  });
 
 });
 
@@ -53,7 +27,7 @@ window.addEventListener('DOMContentLoaded', event => {
 // Bend service area map
 function initMap() {
   const map = new google.maps.Map(document.getElementById("service-area-map"), {
-    zoom: 9,
+    zoom: 8,
     center: { lat: 44.0582, lng: -121.3153 },
   });
   // Define the LatLng coordinates for the polygon's path.
@@ -82,34 +56,6 @@ function initMap() {
 
 
 
-
-// ---
-
-  // Closes responsive menu when a scroll trigger link is clicked
-$(".js-scroll-trigger").click(function () {
-    $(".navbar-collapse").collapse("hide");
-});
-
-// Activate scrollspy to add active class to navbar items on scroll
-$("body").scrollspy({
-    target: "#mainNav",
-    offset: 100,
-});
-
-// Collapse Navbar
-var navbarCollapse = function () {
-    if ($("#mainNav").offset().top > 100) {
-        $("#mainNav").addClass("navbar-shrink");
-    } else {
-        $("#mainNav").removeClass("navbar-shrink");
-    }
-};
-// Collapse now if page is not at top
-navbarCollapse();
-// Collapse the navbar when page is scrolled
-$(window).scroll(navbarCollapse);
-
-
 // customer portal log out functionality
 const logOut = $('#log-out')
 
@@ -118,8 +64,8 @@ logOut.on('click', () =>{
 })
 
 
+
 $('#reviewModal').on('show.bs.modal', (event) => {
-  console.log('hello');
   const modal = $('#reviewModal');
   const button = $(event.relatedTarget); // Button that triggered the modal
   const user_first_name = button.data('user_first_name');
