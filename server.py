@@ -14,12 +14,6 @@ import cloudinary.uploader
 app = Flask(__name__)
 app.secret_key = flask_secret_key
 
-@app.route('/test')
-def test():
-  """Returns rendered testt page"""
-
-  return render_template('test.html');
-
 @app.route('/')
 def hompage():
   """Returns rendered homepage """
@@ -38,6 +32,7 @@ def login():
 @app.route('/handle-login', methods=['POST'])
 def handle_login():
   """Check accuracy of log in information and redirect accordingly """
+  
   email = request.form['email']
   password = request.form['password']
 
@@ -62,7 +57,7 @@ def handle_login():
 
 
   else:
-    flash("You entered the wrong password.  Please try again", "error")
+    flash("You entered the wrong password.  Please try again", "danger")
     return redirect("/")
 
 @app.route('/create_account')
@@ -75,21 +70,29 @@ def create_user():
   last_name = request.form['last_name']
   email = request.form['email']
   password = request.form['password']
+
+  if crud.get_user_by_email(email):
+    flash('Looks like you already have an account. Please login here.','warning')
+    return redirect('/login')
   
-  crud.create_user(user_id=405, first_name=first_name, last_name=last_name, email=email, password=password, role='customer')
+  crud.create_user(first_name=first_name, last_name=last_name, email=email, password=password, role='customer')
   
   user = crud.get_user_by_email(email)
   session['user'] = user.user_id
   session['role'] = 'customer'
 
+  flash('Account successfully created','success')
   return redirect('/customer')
 
 
 @app.route('/customer')
 def customer_login():
 
-  if 'role' not in session.keys() or session['role'] != 'customer':
+  if 'role' not in session.keys():
     return redirect('/')
+  elif session['role'] == 'employee':
+    return redirect('/employee')
+    
   user_id = session['user']
   user = crud.get_user_by_id(user_id)
 
@@ -156,7 +159,7 @@ def add_address():
   response = requests.get('https://maps.googleapis.com/maps/api/geocode/json', params)
 
   if not response.json()['results']:
-    flash('Address is not valid. Please enter a new address.','error')
+    flash('Address is not valid. Please enter a new address.','danger')
     return redirect('/create_address')
 
   request_lng = response.json()['results'][0]['geometry']['location']['lng']
@@ -175,7 +178,7 @@ def add_address():
     return redirect('/request_clean')
 
   else:
-    flash('Address is not currently in our service area. Please enter a new address.')
+    flash('Address is not currently in our service area. Please enter a new address.', 'danger')
     return redirect('/create_address')
 
 @app.route('/employee')

@@ -76,3 +76,10 @@ $('#reviewModal').on('show.bs.modal', (event) => {
   $('#modal_job_id').val(job_id);
 });
 
+
+$('.datepicker').datepicker({
+  // An integer (positive/negative) sets it relative to today.
+  min: -15,
+  // `true` sets it to today. `false` removes any limits.
+  max: true
+  })

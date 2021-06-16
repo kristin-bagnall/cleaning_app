@@ -10,14 +10,19 @@
 
 {% set ns = namespace(has_images=false) %}
 {% set ns = namespace(next_clean_time=false) %}
+{% set ns = namespace(has_upcoming_clean=false) %}
+{% set ns = namespace(has_past_clean=false) %}
+
 {% for job in user.customer_jobs %}
     {% if job.start_time <= date_now %}
+        {% set ns.has_past_clean=true %}
         {% if job.images != [] %}
             {% set ns.has_images=true %}
         {% endif %}
     {% endif %}
 
     {% if job.start_time > date_now %}
+        {% set ns.has_upcoming_clean=true %}
         {% if not ns.next_clean_time or job.start_time < ns.next_clean_time %}
             {% set ns.next_clean_time=job.start_time %}
         {% endif %}
@@ -49,9 +54,9 @@
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="/">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Profile
+                                    Homepage
                                 </a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
@@ -70,138 +75,155 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <div class="row align-items-center no-gutters mb-4 mb-lg-5">
-
-                        <div class="col-xl-8 col-lg-7">
-                            <h3 class="h3 mb-2 text-gray-800">Welcome, {{ user.first_name }}!</h3>
-                            <h5 class="h5 mb-2 text-gray-800">Your next clean is scheduled for {{ ns.next_clean_time.strftime('%A, %B %d') }}</h5>
-                        </div>
-                        <div class="col-xl-4 col-lg-5">
-                            <div class="featured-text text-center text-lg-right">
-                                <a class="btn btn-secondary" id='request_clean' href="/request_clean">Request New Clean</a>
-                            </div>
-                        </div>
-                    </div>
+                    <br>
+                    
                     <!-- Upcoming Cleans -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Upcoming Cleans</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Date</th>
-                                            <th>Estimate</th>
-                                            <th>Cleaner(s)</th>
-                                            <th>Status</th>
-                                            <!-- <th>Invoice (Pending)</th> -->
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% for job in user.customer_jobs %}
-                                        {% if job.start_time > date_now %}
-                                        <tr>
-                                        <td>{{ job.start_time }}</td>
-                                        <td>${{ job.amount }}</td>
-                                        <td> 
-                                            {% for employee in job.employees %}
-                                            {% if loop.last %}
-                                                {{ employee.first_name }}
-                                            {% else %}
-                                                {{ employee.first_name }},
-                                            {% endif %}
-                                            {% endfor %} 
-                                        </td>
-                                        <td>Confirmed</td>
-                                        <!-- <td><a class="btn btn-primary btn-block" href="/download/{{job.invoices[0].invoice_id}}" target="_blank">click me</a></td>  -->
-                                        </tr>
-                                        {% endif %}
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Past Cleans -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Past Cleans</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="50%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Date</th>
-                                            <th>Total Cost</th>
-                                            <th>Cleaner(s)</th>
-                                            <th>Review</th>
-                                            <th>Invoice</th>
-                                            {% if ns.has_images %}
-                                                <th>Images</th>
-                                            {% endif %}
-                                            <th>Uploads</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for job in user.customer_jobs %}
-                                            {% if job.start_time <= date_now %}
-                                                <tr class="d-sm-table-row">
-                                                    <td>{{ job.start_time }}</td>
-                                                    <td>${{ job.amount }}</td>
-                                                    <td> 
-                                                        {% for employee in job.employees %}
-                                                            {% if loop.last %}
-                                                            {{ employee.first_name }}
-                                                            {% else %}
-                                                            {{ employee.first_name }},
-                                                            {% endif %}
-                                                        {% endfor %} 
-                                                    </td>
-                                                    <td>
-                                                    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#reviewModal" 
-                                                            data-user_first_name={{ user.first_name }} data-job_id={{ job.job_id }}>Review</button>
-                                                    </td>
-                                                    <td>
-                                                        <a class="btn btn-primary btn-sm" href="/download/{{job.invoices[0].invoice_id}}" target="_blank">click me</a>
-                                                    </td>
-                                                    {% if ns.has_images %}
-                                                        <td class="w-15">
-                                                            <div class="row">
-                                                                {% for image in job.images[:3] %}
-                                                                    {% if job.images[:3]|length == 1 %}
-                                                                        <div class="col-md-12">
-                                                                    {% elif job.images[:3]|length == 2 %}
-                                                                        <div class="col-md-6">
-                                                                    {% elif job.images[:3]|length == 3 %}
-                                                                        <div class="col-md-4">
-                                                                    {% endif %}
-                                                                            <a href={{ image.image_url }} target="_blank">
-                                                                            <img src={{ image.image_url }} class="img-fluid img-thumbnail" alt="User uploaded clean photo">
-                                                                            </a>
-                                                                        </div>
-                                                                {% endfor %}
-                                                            </div>
-                                                        </td>
-                                                    {% endif %}
-                                                    <td>
-                                                        <form action="/post-form-data" method="POST" enctype="multipart/form-data">
-                                                            <input type="file" name="customer-image">
-                                                            <input name="job_id" value={{ job.job_id }} hidden >
-                                                            <input type="submit">
-                                                        </form>
-                                                    </td>
-                                                </tr>
-                                            {% endif %}
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                    <div class=row>
+                        <div class="col-lg-1"></div>
+                        <div class="col-lg-10">
+                            <div class="row align-items-center no-gutters mb-4 mb-lg-5">
 
+                                <div class="col-xl-6 col-lg-6">
+                                    <h3 class="h3 mb-2 text-black">Welcome, <b>{{ user.first_name }}</b>!</h3>
+                                    {% if ns.next_clean_time %}
+                                    <h5 class="h5 mb-2 text-black">Your next clean is scheduled for <b>{{ ns.next_clean_time.strftime('%A, %B %d') }}</b></h5>
+                                    {% endif %}
+                                </div>
+                                <div class="col-xl-6 col-lg-6">
+                                    <div class="featured-text text-right">
+                                        <a class="btn btn-secondary" id='request_clean' href="/request_clean">Request New Clean</a>
+                                    </div>
+                                </div>
+                            </div>
+                                
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Upcoming Cleans</h6>
+                                </div>
+                                {% if ns.has_upcoming_clean %}
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Estimate</th>
+                                                    <th>Cleaner(s)</th>
+                                                    <th>Status</th>
+                                                    <!-- <th>Invoice (Pending)</th> -->
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for job in user.customer_jobs %}
+                                                {% if job.start_time > date_now %}
+                                                <tr>
+                                                <td>{{ job.start_time }}</td>
+                                                <td>${{ job.amount }}</td>
+                                                <td> 
+                                                    {% for employee in job.employees %}
+                                                    {% if loop.last %}
+                                                        {{ employee.first_name }}
+                                                    {% else %}
+                                                        {{ employee.first_name }},
+                                                    {% endif %}
+                                                    {% endfor %} 
+                                                </td>
+                                                <td>Confirmed</td>
+                                                <!-- <td><a class="btn btn-primary btn-block" href="/download/{{job.invoices[0].invoice_id}}" target="_blank">click me</a></td>  -->
+                                                </tr>
+                                                {% endif %}
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                {% else %}
+                                    <div class="card-body">
+                                        <h6 class="m-0 text-secondary">Whoops! Looks like you don't have any scheduled cleans. Request new clean above.</h6>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <!-- Past Cleans -->
+                            {% if ns.has_past_clean %}
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3">
+                                    <h6 class="m-0 font-weight-bold text-primary">Past Cleans</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="dataTable" width="50%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Total Cost</th>
+                                                    <th>Cleaner(s)</th>
+                                                    <th>Review</th>
+                                                    <th>Invoice</th>
+                                                    {% if ns.has_images %}
+                                                        <th>Images</th>
+                                                    {% endif %}
+                                                    <th>Uploads</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for job in user.customer_jobs %}
+                                                    {% if job.start_time <= date_now %}
+                                                        <tr class="d-sm-table-row">
+                                                            <td>{{ job.start_time }}</td>
+                                                            <td>${{ job.amount }}</td>
+                                                            <td> 
+                                                                {% for employee in job.employees %}
+                                                                    {% if loop.last %}
+                                                                    {{ employee.first_name }}
+                                                                    {% else %}
+                                                                    {{ employee.first_name }},
+                                                                    {% endif %}
+                                                                {% endfor %} 
+                                                            </td>
+                                                            <td>
+                                                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#reviewModal" 
+                                                                    data-user_first_name={{ user.first_name }} data-job_id={{ job.job_id }}>Review</button>
+                                                            </td>
+                                                            <td>
+                                                                <a class="btn btn-primary btn-sm" href="/download/{{job.invoices[0].invoice_id}}" target="_blank">click me</a>
+                                                            </td>
+                                                            {% if ns.has_images %}
+                                                                <td class="w-15">
+                                                                    <div class="row">
+                                                                        {% for image in job.images[:3] %}
+                                                                            {% if job.images[:3]|length == 1 %}
+                                                                                <div class="col-md-12">
+                                                                            {% elif job.images[:3]|length == 2 %}
+                                                                                <div class="col-md-6">
+                                                                            {% elif job.images[:3]|length == 3 %}
+                                                                                <div class="col-md-4">
+                                                                            {% endif %}
+                                                                                    <a href={{ image.image_url }} target="_blank">
+                                                                                    <img src={{ image.image_url }} class="img-fluid img-thumbnail" alt="User uploaded clean photo">
+                                                                                    </a>
+                                                                                </div>
+                                                                        {% endfor %}
+                                                                    </div>
+                                                                </td>
+                                                            {% endif %}
+                                                            <td>
+                                                                <form action="/post-form-data" method="POST" enctype="multipart/form-data">
+                                                                    <input type="file" name="customer-image">
+                                                                    <input name="job_id" value={{ job.job_id }} hidden >
+                                                                    <input type="submit">
+                                                                </form>
+                                                            </td>
+                                                        </tr>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
                 <!-- /.container-fluid -->
 

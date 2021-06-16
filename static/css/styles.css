@@ -1665,7 +1665,7 @@ pre code {
 }
 .table th,
 .table td {
-  padding: 0.75rem;
+  padding: 0.5rem;
   vertical-align: top;
   border-top: 1px solid #dee2e6;
 }
@@ -3001,6 +3001,7 @@ fieldset:disabled a.btn {
 .btn-block + .btn-block {
   margin-top: 0.5rem;
 }
+
 
 input[type=submit].btn-block,
 input[type=reset].btn-block,
@@ -4461,7 +4462,7 @@ input[type=button].btn-block {
 .card-body {
   flex: 1 1 auto;
   min-height: 1px;
-  padding: 1.25rem;
+  padding: 2rem;
 }
 
 .card-title {
@@ -10415,8 +10416,24 @@ body {
 }
 
 
+.bg-add-address-image {
+  background: url("../assets/img/interior1.jpg");
+  background-position: center;
+  background-size: cover;
+}
+
+.bg-request-clean-image {
+  background: url("../assets/img/interior2.jpg");
+  background-position: center;
+  background-size: cover;
+}
+
+
+
 .container-fluid {
-  background-image: url("../assets/img/lemons.jpg");
+  background-image: 
+    linear-gradient(to bottom, rgba(255,255,0,0.2), rgba(255,255,0,0.8)),
+    url("../assets/img/lemons.jpg");
   background-position: center;
   background-size: cover;
 }

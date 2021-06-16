@@ -6,4 +6,35 @@
     
     this is the employee page
   </h1>
+
+
+  <div class="row">
+    <div class="col-lg-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-chart-bar me-1"></i>
+                Revenue by Month
+            </div>
+            <div class="card-body"><canvas id="myBarChart" width="100%" height="50"></canvas></div>
+            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-chart-pie me-1"></i>
+                Cleans, by type
+            </div>
+            <div class="card-body"><canvas id="myPieChart" width="100%" height="50"></canvas></div>
+            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+<script src="static/assets/demo/chart-bar-demo.js"></script>
+<script src="static/assets/demo/chart-pie-demo.js"></script>
 {% endblock %}
