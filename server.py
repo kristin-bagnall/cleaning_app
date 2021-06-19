@@ -1,12 +1,9 @@
-from flask import Flask, render_template, request, make_response, redirect, session, flash, send_file
+from flask import Flask, render_template, request, make_response, redirect, session, flash, send_file, jsonify
 import crud
 from model import connect_to_db
-import os
 from secrets import flask_secret_key, GOOGLE_API_KEY, ClOUDINARY_API_KEY, ClOUDINARY_API_SECRET, CLOUDINARY_CLOUD_NAME
-import invoice_generator
 from datetime import datetime
 import requests
-import json
 from math import cos, asin, sqrt, pi
 import cloudinary.uploader
 
@@ -134,6 +131,27 @@ def request_clean():
 
   return render_template('request_clean.html', user=user)
 
+
+@app.route('/create_clean', methods=['POST'])
+def create_clean():
+  """Creates clean job with pending status and redirects customer to portal"""
+  
+  address_id = request.form['address_id']
+
+  if not address_id:
+    flash('You must select an address.','danger')
+    return redirect('/request_clean')
+
+  customer_id = session.get('user')
+  
+  start_time = request.form['start_time']
+
+  crud.create_job(customer_id, address_id, start_time, end_time=None, amount=0, status='Pending')
+
+  flash('Thank you for your request. We will respond soon.','success')
+  return redirect('/customer')
+
+
 @app.route('/create_address')
 def create_address():
   """ Renders create address template """
@@ -189,7 +207,11 @@ def employee_login():
 
   user = crud.get_user_by_id(session['user'])
 
-  return render_template('employee.html', user=user)
+  pending_jobs = crud.get_all_pending_jobs()
+  
+  date_now = datetime.now()
+  
+  return render_template('employee.html', user=user, date_now=date_now, pending_jobs=pending_jobs)
 
 
 @app.route('/download/<invoice_id>')
@@ -199,12 +221,31 @@ def download_invoice(invoice_id):
 
   if not user_id:
     return redirect('/')
-
-  user = crud.get_user_by_id(user_id)
   
   crud.generate_invoices()
   
   return send_file(f'invoices/{user_id}/{invoice_id}.pdf')
+
+
+@app.route('/job_status', methods=['POST'])
+def update_job_status():
+
+  user_id = session.get('user')
+  job_id = request.form['job_id']
+  status = request.form['status']
+
+  crud.update_job_status(job_id, status)
+  crud.update_job_estimate(job_id)
+
+  if status == 'Confirmed':
+    crud.create_employee_job(user_id,job_id)
+    crud.generate_invoices()
+    flash('Job has been confirmed.', 'info')
+  elif status == 'Denied':
+    flash('Job has been denied.', 'info')
+
+  return redirect('/employee')
+
 
 @app.route('/logout')
 def logout_user():

@@ -75,11 +75,3 @@ $('#reviewModal').on('show.bs.modal', (event) => {
   modal.find('.modal-title').text(user_first_name + ', we appreciate your feedback');
   $('#modal_job_id').val(job_id);
 });
-
-
-$('.datepicker').datepicker({
-  // An integer (positive/negative) sets it relative to today.
-  min: -15,
-  // `true` sets it to today. `false` removes any limits.
-  max: true
-  })

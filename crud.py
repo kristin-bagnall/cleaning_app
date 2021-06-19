@@ -59,21 +59,55 @@ def create_address(customer_id, address_type, street, city, state, zip_code):
 
   return address
 
-def create_job(customer_id, address_id, start_time, end_time, job_type, amount):
+
+def create_job(customer_id, address_id, start_time, end_time, amount, status):
   """Create and return a new job"""
 
   job = Job(customer_id=customer_id,
             address_id=address_id, 
             start_time=start_time, 
             end_time=end_time,
-            job_type=job_type,
-            amount=amount
+            amount=amount,
+            status=status
             )
 
   db.session.add(job)
   db.session.commit()
 
   return job
+
+def get_all_pending_jobs():
+  """ Returns list of all Pending jobs """
+
+  return Job.query.filter_by(status='Pending').all()
+
+def update_job_status(job_id, status):
+  """ Takes a job id and updates the status to confirmed """
+
+  job = Job.query.get(job_id)
+
+  job.status = status
+
+  db.session.commit()
+  
+  return
+
+def update_job_estimate(job_id, estimate=150):
+  """ Takes a job id and updates the status to confirmed """
+
+  job = Job.query.get(job_id)
+
+  job.estimate = estimate
+
+  db.session.commit()
+  
+  return
+
+def get_job_by_id(job_id):
+  """ Takes a job ID, returns the job record. """
+
+  return Job.query.get(job_id)
+
 
 def create_employee_job(employee_id, job_id):
   """Create and return a new employee job relationship"""
@@ -126,7 +160,7 @@ def generate_invoices():
     invoice_number = invoice.invoice_id
     date = (invoice.job.start_time).date().isoformat()
     due_date = (invoice.job.start_time.date() + timedelta(days=30)).isoformat()
-    item_name = invoice.job.job_type
+    item_name = invoice.job.address.address_type
     item_cost = invoice.job.amount
     
     if not os.path.exists(f'invoices/{customer_id}'):
@@ -199,7 +233,7 @@ def create_address_with_id(address_id, customer_id, address_type, street, city, 
 
   return address
 
-def create_job_with_id(job_id, customer_id, address_id, start_time, end_time, job_type, amount):
+def create_job_with_id(job_id, customer_id, address_id, start_time, end_time, amount, status):
   """Create and return a new job"""
 
   job = Job(job_id=job_id, 
@@ -207,8 +241,8 @@ def create_job_with_id(job_id, customer_id, address_id, start_time, end_time, jo
             address_id=address_id, 
             start_time=start_time, 
             end_time=end_time,
-            job_type=job_type,
-            amount=amount
+            amount=amount,
+            status=status
             )
 
   db.session.add(job)

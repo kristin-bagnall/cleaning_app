@@ -12,6 +12,7 @@
 {% set ns = namespace(next_clean_time=false) %}
 {% set ns = namespace(has_upcoming_clean=false) %}
 {% set ns = namespace(has_past_clean=false) %}
+{% set ns = namespace(has_pending_cleans=false) %}
 
 {% for job in user.customer_jobs %}
     {% if job.start_time <= date_now %}
@@ -25,6 +26,9 @@
         {% set ns.has_upcoming_clean=true %}
         {% if not ns.next_clean_time or job.start_time < ns.next_clean_time %}
             {% set ns.next_clean_time=job.start_time %}
+        {% endif %}
+        {% if job.status == 'Pending' %}
+            {% set ns.has_pending_cleans=true %}
         {% endif %}
     {% endif %}
 
@@ -95,7 +99,39 @@
                                     </div>
                                 </div>
                             </div>
-                                
+                            
+                            {% if ns.has_pending_cleans %}
+                                <div class="card shadow mb-4">
+                                    <div class="card-header py-3">
+                                        <h6 class="m-0 font-weight-bold text-primary">Pending Clean Requests</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Date</th>
+                                                        <th>Address</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for job in user.customer_jobs %}
+                                                        {% if job.start_time > date_now and job.status == 'Pending' %}
+                                                        <tr>
+                                                            <td>{{ job.start_time }}</td>
+                                                            <td>{{ job.address.street }}</td>
+                                                            <td>{{ job.status }}</td>
+                                                        </tr>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold text-primary">Upcoming Cleans</h6>
@@ -115,7 +151,7 @@
                                             </thead>
                                             <tbody>
                                             {% for job in user.customer_jobs %}
-                                                {% if job.start_time > date_now %}
+                                                {% if job.start_time > date_now and job.status == 'Confirmed' %}
                                                 <tr>
                                                 <td>{{ job.start_time }}</td>
                                                 <td>${{ job.amount }}</td>
@@ -128,8 +164,7 @@
                                                     {% endif %}
                                                     {% endfor %} 
                                                 </td>
-                                                <td>Confirmed</td>
-                                                <!-- <td><a class="btn btn-primary btn-block" href="/download/{{job.invoices[0].invoice_id}}" target="_blank">click me</a></td>  -->
+                                                <td>{{ job.status }}</td>
                                                 </tr>
                                                 {% endif %}
                                             {% endfor %}
@@ -167,7 +202,7 @@
                                             </thead>
                                             <tbody>
                                                 {% for job in user.customer_jobs %}
-                                                    {% if job.start_time <= date_now %}
+                                                    {% if job.start_time <= date_now and job.status == 'Confirmed' %}
                                                         <tr class="d-sm-table-row">
                                                             <td>{{ job.start_time }}</td>
                                                             <td>${{ job.amount }}</td>
@@ -185,7 +220,9 @@
                                                                     data-user_first_name={{ user.first_name }} data-job_id={{ job.job_id }}>Review</button>
                                                             </td>
                                                             <td>
-                                                                <a class="btn btn-primary btn-sm" href="/download/{{job.invoices[0].invoice_id}}" target="_blank">click me</a>
+                                                                {% if job.invoices %}
+                                                                    <a class="btn btn-primary btn-sm" href="/download/{{job.invoices[0].invoice_id}}" target="_blank">click me</a>
+                                                                {% endif %}
                                                             </td>
                                                             {% if ns.has_images %}
                                                                 <td class="w-15">

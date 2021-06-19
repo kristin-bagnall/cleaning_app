@@ -31,30 +31,36 @@
                           <div class="p-5">
                             <div class="text-center">
                               <h1 class="h4 text-gray-900 mb-4">Need to schedule a clean?</h1>
-                            </div>
-                            <form action="/create-clean" method="POST"> 
-                              <div class="form-group">Address:
                               
-                                <select name="address">
-                                  <option value="">Select ...</option>
-                                  {% for address in user.address %}
-                                  <option value="{{ address.street }}">{{ address.street }}</option>
-                                  {% endfor %}
-                                </select>
-                                <div class="text-center">
-                                  <a class="small" href="/create_address">Add a new address</a>
-                                </div>
                               </div>
+                                
+                                <form action="/create_clean" method="POST"> 
+                                  <div class="row">
+                                    <div class="col-sm-9 form-group">
+                                      <label for="address" >Address:</label>
+                                      <select class="form-control" name="address_id" id="address_id">
+                                        <option value="">Select ...</option>
+                                        {% for address in user.address %}
+                                        <option value="{{ address.address_id }}">{{ address.street }}</option>
+                                        {% endfor %}
+                                      </select>
+                                    </div>
+                                    <div class="col-sm-3 text-center">
+                                      <a class="btn btn-secondary" href="/create_address">Add address</a>
+                                    </div>
+                                  </div>
                               
-                              <div class="md-form md-outline input-with-post-icon datepicker">
-                                <input type="date" value="2021-06-15">                                
-                              </div>                              
-                              
-                          
-                              <div class="form-group">
-                                <input type="text" class="form-control form-control-user"
-                                    placeholder="Tell me more about your request"
-                                    id='request_clean' name="request_clean" required>
+                              <div class="row">
+                                <div class="col-md-5">
+                                  <div class="md-form md-outline input-with-post-icon">
+                                    <input class="form-control" type="datetime-local" name="start_time" id="start_time" value="">                                
+                                  </div>
+                                </div>
+                                <div class="col-md-7 form-group">
+                                  <input type="text" class="form-control form-control-user"
+                                      placeholder="Add any details here"
+                                      id='request_clean' name="request_clean">
+                                </div>
                               </div>
                               <input type="submit" class="btn btn-primary btn-user btn-block" value="Submit Request">
                             </form>

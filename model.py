@@ -1,6 +1,7 @@
 """Models for cleaning app."""
 
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import backref
 from datetime import datetime
 
 db = SQLAlchemy()
@@ -27,6 +28,7 @@ class User(db.Model):
     role = db.Column(db.Text,
                         nullable=False)  
     customer_jobs = db.relationship('Job', order_by='Job.start_time')
+    
 
     def __repr__(self):
         return f'<User user_id={self.user_id} email={self.email}>'
@@ -80,16 +82,15 @@ class Job(db.Model):
 
     end_time = db.Column(db.DateTime,)
 
-    job_type = db.Column(db.Text,
-                        nullable=False)
-
     amount = db.Column(db.Integer)
+
+    status = db.Column(db.Text)
 
     customer = db.relationship('User', foreign_keys=[customer_id])
 
     employees = db.relationship('User', 
                                 secondary="employees_jobs", 
-                                backref='jobs')
+                                backref=backref('jobs',order_by="Job.start_time"))
 
     address = db.relationship('Address', backref='employee_jobs')
 
