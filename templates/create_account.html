@@ -3,15 +3,15 @@
 
 {% block navigation %}
 <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="loginNav">
-    <div class="container px-4 px-lg-5">
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a class="nav-link" href="/customer">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="/#signup">Contact</a></li>
-                <li class="nav-item"><a class="nav-link" href="/login">Existing Customer</a></li>
-            </ul>
-        </div>
+  <div class="container px-4 px-lg-5">
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item"><a class="nav-link" href="/customer">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/#signup">Contact</a></li>
+        <li class="nav-item"><a class="nav-link" href="/login">Existing Customer</a></li>
+      </ul>
     </div>
+  </div>
 </nav>
 <br>
 <br>
@@ -22,51 +22,51 @@
 
 <div class="container">
 
-    <div class="card o-hidden border-0 shadow-lg my-5">
-        <div class="card-body p-0">
-            <!-- Nested Row within Card Body -->
-            <div class="row">
-                <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
-                <div class="col-lg-7">
-                    <div class="p-5">
-                        <div class="text-center">
-                            <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
-                        </div>
-                        <form class="user" action="/create_user" method="POST">
-                            <div class="form-group row">
-                                <div class="col-sm-6 mb-3 mb-sm-0">
-                                    <input type="text" class="form-control form-control-user" 
-                                        id='first_name' name="first_name" required
-                                        placeholder="First Name">
-                                </div>
-                                <div class="col-sm-6">
-                                    <input type="text" id='last_name' name="last_name" required
-                                        class="form-control form-control-user" placeholder="Last Name">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <input type="email" class="form-control form-control-user"  id='email' name="email" required
-                                    placeholder="Email Address">
-                            </div>
-                            <div class="form-group">
-                                    <input type="password" class="form-control form-control-user"
-                                    id="password" name="password" required
-                                    placeholder="Password">
-                            </div>
-                            <input type="submit" value="Create Account" class="btn btn-primary btn-user btn-block">
-                        </form>
-                        <hr>
-                        <div class="text-center">
-                            <a class="small" href="forgot-password.html">Forgot Password?</a>
-                        </div>
-                        <div class="text-center">
-                            <a class="small" href="login">Already have an account? Login!</a>
-                        </div>
-                    </div>
-                </div>
+  <div class="card o-hidden border-0 shadow-lg my-5">
+    <div class="card-body p-0">
+      <!-- Nested Row within Card Body -->
+      <div class="row">
+        <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+        <div class="col-lg-7">
+          <div class="p-5">
+            <div class="text-center">
+              <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
             </div>
+            <form class="user" action="/create_user" method="POST">
+              <div class="form-group row">
+                <div class="col-sm-6 mb-3 mb-sm-0">
+                  <input type="text" class="form-control form-control-user" 
+                    id='first_name' name="first_name" required
+                    placeholder="First Name">
+                </div>
+                <div class="col-sm-6">
+                  <input type="text" id='last_name' name="last_name" required
+                    class="form-control form-control-user" placeholder="Last Name">
+                </div>
+              </div>
+              <div class="form-group">
+                <input type="email" class="form-control form-control-user" id='email' name="email" required
+                  placeholder="Email Address">
+              </div>
+              <div class="form-group">
+                  <input type="password" class="form-control form-control-user"
+                  id="password" name="password" required
+                  placeholder="Password">
+              </div>
+              <input type="submit" value="Create Account" class="btn btn-primary btn-user btn-block">
+            </form>
+            <hr>
+            <div class="text-center">
+              <a class="small" href="forgot-password.html">Forgot Password?</a>
+            </div>
+            <div class="text-center">
+              <a class="small" href="login">Already have an account? Login!</a>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 
 </div>
 

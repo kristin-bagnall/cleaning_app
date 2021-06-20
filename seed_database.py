@@ -1,7 +1,6 @@
 '''Script to seed database.'''
 
 import os
-import json
 from datetime import datetime
 
 import crud
@@ -43,9 +42,9 @@ def create_fake_users():
 
 
 def create_fake_addresses():
-  crud.create_address_with_id(111, 111, 'primary', '3544 NW Braid Dr', 'Bend', 'OR', 97703)
-  crud.create_address_with_id(112, 111, 'vacation', '17652 Tennis Village Ct #37,', 'Sunriver', 'OR', 97707)
-  crud.create_address_with_id(113, 111, 'vacation', '63168 Peale St', 'Bend', 'OR', 97701)
+  crud.create_address_with_id(111, 111, 'Primary Residence', '3544 NW Braid Dr', 'Bend', 'OR', 97703)
+  crud.create_address_with_id(112, 111, 'Vacation Home', '17652 Tennis Village Ct,', 'Sunriver', 'OR', 97707)
+  crud.create_address_with_id(113, 111, 'Vacation Home', '63168 Peale St', 'Bend', 'OR', 97701)
 
 def create_employee_job():
   crud.create_employee_job(11203,11100)
