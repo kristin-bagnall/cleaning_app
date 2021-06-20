@@ -5,7 +5,7 @@
 {% block navigation %}
 <nav class="navbar navbar-expand-lg navbar-light" id="loginNav">
   <div class="container px-4 px-lg-5">
-    <div class="collapse navbar-collapse" id="navbarResponsive">
+    <div class="navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item"><a class="nav-link" href="/customer">Home</a></li>
         <li class="nav-item"><a class="nav-link" href="/#signup">Contact</a></li>
@@ -34,16 +34,14 @@
                 </div>
                 <form action="/handle-login" method="POST" class="user">
                   <div class="form-group">
-                  <!-- to do: change type to "email" -->
-                    <input type="text" class="form-control form-control-user"
-                      id="exampleInputEmail" aria-describedby="emailHelp"
-                      placeholder="Enter Email Address..."
-                      id='email' name="email" required>
+                    <!-- to do: change type to "email" -->
+                    <input type="text" class="form-control form-control-user" id="exampleInputEmail"
+                      aria-describedby="emailHelp" placeholder="Enter Email Address..." id='email' name="email"
+                      required>
                   </div>
                   <div class="form-group">
-                    <input type="password" class="form-control form-control-user"
-                      id="exampleInputPassword" placeholder="Password"
-                      id="password" name="password" required>
+                    <input type="password" class="form-control form-control-user" id="exampleInputPassword"
+                      placeholder="Password" id="password" name="password" required>
                   </div>
                   <input type="submit" class="btn btn-primary btn-user btn-block" value="Sign In">
                 </form>

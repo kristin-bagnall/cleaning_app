@@ -33,257 +33,261 @@
   {% endif %}
 
 {% endfor %}
-  <!-- Page Wrapper -->
-  <div id="wrapper">
-    <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column">
-      <!-- Main Content -->
-      <div id="content">
-        <!-- Topbar -->
-        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-3 static-top shadow">
-          <!-- Topbar Navbar -->
-          <ul class="navbar-nav ml-auto">
-            <!-- Nav Item - User Information -->
-            <li class="nav-item dropdown no-arrow">
-              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ user.first_name }} {{ user.last_name }}</span>
-                <i class="fas fa-user-circle"></i>
+<!-- Page Wrapper -->
+<div id="wrapper">
+  <!-- Content Wrapper -->
+  <div id="content-wrapper" class="d-flex flex-column">
+    <!-- Main Content -->
+    <div id="content">
+      <!-- Topbar -->
+      <nav class="navbar navbar-expand navbar-light bg-white topbar mb-3 static-top shadow">
+        <!-- Topbar Navbar -->
+        <ul class="navbar-nav ml-auto">
+          <!-- Nav Item - User Information -->
+          <li class="nav-item dropdown no-arrow">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ user.first_name }} {{ user.last_name
+                }}</span>
+              <i class="fas fa-user-circle"></i>
+            </a>
+            <!-- Dropdown - User Information -->
+            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+              <a class="dropdown-item" href="/">
+                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                Homepage
               </a>
-              <!-- Dropdown - User Information -->
-              <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="/">
-                  <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                  Homepage
-                </a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                  Logout
-                </a>
-              </div>
-            </li>
-          </ul>
-        </nav>
-        <!-- End of Topbar -->
-        <!-- Begin Page Content -->
-        <div class="container-fluid">
-          <!-- Page Heading -->
-          <br>          
-          <!-- Upcoming Cleans -->
-          <div class=row>
-            <div class="col-lg-1"></div>
-            <div class="col-lg-10">
-              <div class="row align-items-center no-gutters mb-4 mb-lg-5">
-                <div class="col-xl-6 col-lg-6">
-                  <h3 class="h3 mb-2 text-black">Welcome, <b>{{ user.first_name }}</b>!</h3>
-                  {% if ns.next_clean_time %}
-                  <h5 class="h5 mb-2 text-black">Your next clean is scheduled for <b>{{ ns.next_clean_time.strftime('%A, %B %d') }}</b></h5>
-                  {% endif %}
-                </div>
-                <div class="col-xl-6 col-lg-6">
-                  <div class="featured-text text-right">
-                    <a class="btn btn-secondary" id='request_clean' href="/request_clean">Request New Clean</a>
-                  </div>
-                </div>
-              </div>
-              
-              {% if ns.has_pending_cleans %}
-                <div class="card shadow mb-4">
-                  <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Pending Clean Requests</h6>
-                  </div>
-                  <div class="card-body">
-                    <div class="table-responsive">
-                      <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                        <thead>
-                          <tr>
-                            <th>Date</th>
-                            <th>Address</th>
-                            <th>Status</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {% for job in user.customer_jobs %}
-                            {% if job.start_time > date_now and job.status == 'Pending' %}
-                            <tr>
-                              <td>{{ job.start_time }}</td>
-                              <td>{{ job.address.street }}</td>
-                              <td>{{ job.status }}</td>
-                            </tr>
-                            {% endif %}
-                          {% endfor %}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              {% endif %}
-              <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Upcoming Cleans</h6>
-                </div>
-                {% if ns.has_upcoming_clean %}
-                <div class="card-body">
-                  <div class="table-responsive">
-                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                      <thead>
-                        <tr>
-                          <th>Date</th>
-                          <th>Estimate</th>
-                          <th>Cleaner(s)</th>
-                          <th>Status</th>
-                          <!-- <th>Invoice (Pending)</th> -->
-                        </tr>
-                      </thead>
-                      <tbody>
-                      {% for job in user.customer_jobs %}
-                        {% if job.start_time > date_now and job.status == 'Confirmed' %}
-                        <tr>
-                        <td>{{ job.start_time }}</td>
-                        <td>${{ job.amount }}</td>
-                        <td> 
-                          {% for employee in job.employees %}
-                          {% if loop.last %}
-                            {{ employee.first_name }}
-                          {% else %}
-                            {{ employee.first_name }},
-                          {% endif %}
-                          {% endfor %} 
-                        </td>
-                        <td>{{ job.status }}</td>
-                        </tr>
-                        {% endif %}
-                      {% endfor %}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                {% else %}
-                  <div class="card-body">
-                    <h6 class="m-0 text-secondary">Whoops! Looks like you don't have any scheduled cleans. Request new clean above.</h6>
-                  </div>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                Logout
+              </a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+      <!-- End of Topbar -->
+      <!-- Begin Page Content -->
+      <div class="container-fluid">
+        <!-- Page Heading -->
+        <br>
+        <!-- Upcoming Cleans -->
+        <div class=row>
+          <div class="col-lg-1"></div>
+          <div class="col-lg-10">
+            <div class="row align-items-center no-gutters mb-4 mb-lg-5">
+              <div class="col-xl-6 col-lg-6">
+                <h3 class="h3 mb-2 text-black">Welcome, <b>{{ user.first_name }}</b>!</h3>
+                {% if ns.next_clean_time %}
+                <h5 class="h5 mb-2 text-black">Your next clean is scheduled for <b>{{ ns.next_clean_time.strftime('%A,
+                    %B %d') }}</b></h5>
                 {% endif %}
               </div>
-              <!-- Past Cleans -->
-              {% if ns.has_past_clean %}
-              <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Past Cleans</h6>
+              <div class="col-xl-6 col-lg-6">
+                <div class="featured-text text-right">
+                  <a class="btn btn-secondary" id='request_clean' href="/request_clean">Request New Clean</a>
                 </div>
-                <div class="card-body">
-                  <div class="table-responsive">
-                    <table class="table table-bordered" id="dataTable" width="50%" cellspacing="0">
-                      <thead>
-                        <tr>
-                          <th>Date</th>
-                          <th>Total Cost</th>
-                          <th>Cleaner(s)</th>
-                          <th>Review</th>
-                          <th>Invoice</th>
-                          <!-- {% if ns.has_images %}
-                            <th>Images</th>
-                          {% endif %} -->
-                          <!-- <th>Uploads</th> -->
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {% for job in user.customer_jobs %}
-                          {% if job.start_time <= date_now and job.status == 'Confirmed' %}
-                            <tr class="d-sm-table-row">
-                              <td>{{ job.start_time }}</td>
-                              <td>${{ job.amount }}</td>
-                              <td> 
-                                {% for employee in job.employees %}
-                                  {% if loop.last %}
-                                  {{ employee.first_name }}
-                                  {% else %}
-                                  {{ employee.first_name }},
-                                  {% endif %}
-                                {% endfor %} 
-                              </td>
-                              <td>
-                              <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#reviewModal" 
-                                  data-user_first_name={{ user.first_name }} data-job_id={{ job.job_id }}>Review</button>
-                              </td>
-                              <td>
-                                {% if job.invoices %}
-                                  <a class="btn btn-primary btn-sm" href="/download/{{job.invoices[0].invoice_id}}" target="_blank">click me</a>
-                                {% endif %}
-                              </td>
-                            </tr>
+              </div>
+            </div>
+
+            {% if ns.has_pending_cleans %}
+            <div class="card shadow mb-4">
+              <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Pending Clean Requests</h6>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Address</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for job in user.customer_jobs %}
+                      {% if job.start_time > date_now and job.status == 'Pending' %}
+                      <tr>
+                        <td>{{ job.start_time }}</td>
+                        <td>{{ job.address.street }}</td>
+                        <td>{{ job.status }}</td>
+                      </tr>
+                      {% endif %}
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+            <div class="card shadow mb-4">
+              <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Upcoming Cleans</h6>
+              </div>
+              {% if ns.has_upcoming_clean %}
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Estimate</th>
+                        <th>Cleaner(s)</th>
+                        <th>Status</th>
+                        <!-- <th>Invoice (Pending)</th> -->
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for job in user.customer_jobs %}
+                      {% if job.start_time > date_now and job.status == 'Confirmed' %}
+                      <tr>
+                        <td>{{ job.start_time }}</td>
+                        <td>${{ job.amount }}</td>
+                        <td>
+                          {% for employee in job.employees %}
+                          {% if loop.last %}
+                          {{ employee.first_name }}
+                          {% else %}
+                          {{ employee.first_name }},
                           {% endif %}
-                        {% endfor %}
-                      </tbody>
-                    </table>
-                  </div>
+                          {% endfor %}
+                        </td>
+                        <td>{{ job.status }}</td>
+                      </tr>
+                      {% endif %}
+                      {% endfor %}
+                    </tbody>
+                  </table>
                 </div>
+              </div>
+              {% else %}
+              <div class="card-body">
+                <h6 class="m-0 text-secondary">Whoops! Looks like you don't have any scheduled cleans. Request new clean
+                  above.</h6>
               </div>
               {% endif %}
             </div>
+            <!-- Past Cleans -->
+            {% if ns.has_past_clean %}
+            <div class="card shadow mb-4">
+              <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Past Cleans</h6>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-bordered" id="dataTable" width="50%" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Total Cost</th>
+                        <th>Cleaner(s)</th>
+                        <th>Review</th>
+                        <th>Invoice</th>
+                        <!-- {% if ns.has_images %}
+                            <th>Images</th>
+                          {% endif %} -->
+                        <!-- <th>Uploads</th> -->
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for job in user.customer_jobs %}
+                      {% if job.start_time <= date_now and job.status=='Confirmed' %} <tr class="d-sm-table-row">
+                        <td>{{ job.start_time }}</td>
+                        <td>${{ job.amount }}</td>
+                        <td>
+                          {% for employee in job.employees %}
+                          {% if loop.last %}
+                          {{ employee.first_name }}
+                          {% else %}
+                          {{ employee.first_name }},
+                          {% endif %}
+                          {% endfor %}
+                        </td>
+                        <td>
+                          <button type="button" class="btn btn-primary btn-sm" data-toggle="modal"
+                            data-target="#reviewModal" data-user_first_name={{ user.first_name }} data-job_id={{
+                            job.job_id }}>Review</button>
+                        </td>
+                        <td>
+                          {% if job.invoices %}
+                          <a class="btn btn-primary btn-sm" href="/download/{{job.invoices[0].invoice_id}}"
+                            target="_blank">click me</a>
+                          {% endif %}
+                        </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            {% endif %}
           </div>
         </div>
-        <!-- /.container-fluid -->
       </div>
-      <!-- End of Main Content -->
+      <!-- /.container-fluid -->
     </div>
-    <!-- End of Content Wrapper -->
+    <!-- End of Main Content -->
   </div>
-  <!-- End of Page Wrapper -->
-  <!-- Logout Modal-->
-  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-          </button>
-        </div>
-        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-          <a class="btn btn-primary" id='log-out' href="/logout">Logout</a>
-        </div>
+  <!-- End of Content Wrapper -->
+</div>
+<!-- End of Page Wrapper -->
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+        <a class="btn btn-primary" id='log-out' href="/logout">Logout</a>
       </div>
     </div>
   </div>
-  <!-- Review Modal -->
-  <div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="reviewModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="reviewModalLabel">Leave a Review</h5>
-        </div>
-        <div class="modal-body">
-          <form action="/create_rating" method="POST" id="feedbackForm">
-            <div class="rate">
-              <input type="radio" id="star5" name="star_rating" value="5" />
-              <label for="star5" title="text">5 stars</label>
-              <input type="radio" id="star4" name="star_rating" value="4" />
-              <label for="star4" title="text">4 stars</label>
-              <input type="radio" id="star3" name="star_rating" value="3" />
-              <label for="star3" title="text">3 stars</label>
-              <input type="radio" id="star2" name="star_rating" value="2" />
-              <label for="star2" title="text">2 stars</label>
-              <input type="radio" id="star1" name="star_rating" value="1" />
-              <label for="star1" title="text">1 star</label>
-            </div>
-            <div class="form-group">
-              <label for="review_text" class="col-form-label"></label>
-              <textarea class="form-control" name="review_text" placeholder="Tell Us More!" ></textarea>
-              <input type="hidden" name="job_id" id="modal_job_id" value="">
-            </div>
-            <button type="submit" class="btn btn-primary" >Submit Feedback</button>
-          </form>
-        </div>
-        <div class="modal-footer">
+</div>
+<!-- Review Modal -->
+<div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="reviewModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="reviewModalLabel">Leave a Review</h5>
+      </div>
+      <div class="modal-body">
+        <form action="/create_rating" method="POST" id="feedbackForm">
+          <div class="rate">
+            <input type="radio" id="star5" name="star_rating" value="5" />
+            <label for="star5" title="text">5 stars</label>
+            <input type="radio" id="star4" name="star_rating" value="4" />
+            <label for="star4" title="text">4 stars</label>
+            <input type="radio" id="star3" name="star_rating" value="3" />
+            <label for="star3" title="text">3 stars</label>
+            <input type="radio" id="star2" name="star_rating" value="2" />
+            <label for="star2" title="text">2 stars</label>
+            <input type="radio" id="star1" name="star_rating" value="1" />
+            <label for="star1" title="text">1 star</label>
+          </div>
+          <div class="form-group">
+            <label for="review_text" class="col-form-label"></label>
+            <textarea class="form-control" name="review_text" placeholder="Tell Us More!"></textarea>
+            <input type="hidden" name="job_id" id="modal_job_id" value="">
+          </div>
+          <button type="submit" class="btn btn-primary">Submit Feedback</button>
+        </form>
+      </div>
+      <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </div>
       </div>
     </div>
   </div>
+</div>
 
 {% endblock %}

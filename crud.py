@@ -92,12 +92,12 @@ def update_job_status(job_id, status):
   
   return
 
-def update_job_estimate(job_id, estimate=150):
+def update_job_estimate(job_id, amount=150):
   """ Takes a job id and updates the status to confirmed """
 
   job = Job.query.get(job_id)
 
-  job.estimate = estimate
+  job.amount = amount
 
   db.session.commit()
   

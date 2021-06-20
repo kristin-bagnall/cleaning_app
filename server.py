@@ -7,13 +7,13 @@ import requests
 from math import cos, asin, sqrt, pi
 import cloudinary.uploader
 
-
 app = Flask(__name__)
 app.secret_key = flask_secret_key
 
 @app.route('/')
 def hompage():
   """Returns rendered homepage """
+
   return render_template('index.html');
 
 @app.route('/login')
@@ -52,13 +52,13 @@ def handle_login():
     else:
       flash('Database error: Incorrect role type. Please reach out to support.','warning')
 
-
   else:
     flash("You entered the wrong password.  Please try again", "danger")
-    return redirect("/")
+    return redirect("/login")
 
 @app.route('/create_account')
 def create_account():
+
   return render_template('create_account.html')
 
 @app.route('/create_user', methods=['POST'])
@@ -265,6 +265,7 @@ def create_rating():
 
   flash('Thank you for your review! We value your feedback.', 'success')
   return redirect('/customer')
+
 
 if __name__ == '__main__':
     # app.run()

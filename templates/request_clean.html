@@ -4,76 +4,74 @@
 
 {% block navigation %}
 <nav class="navbar navbar-expand-lg navbar-light" id="loginNav">
-    <div class="container px-4 px-lg-5">
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a class="nav-link" href="/customer">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="/#signup">Contact</a></li>
-                <li class="nav-item"><a class="nav-link" href="/create_account">New Customer</a></li>
-            </ul>
-        </div>
+  <div class="container px-4 px-lg-5">
+    <div class="navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item"><a class="nav-link" href="/customer">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/#signup">Contact</a></li>
+      </ul>
     </div>
+  </div>
 </nav>
 {% endblock %}
 
 {% block body %}
 <div class="container">
 
-    <!-- Outer Row -->
-    <div class="row justify-content-center">
-        <div class="col-xl-12 col-lg-12 col-md-9">
-            <div class="card o-hidden border-0 shadow-lg my-5">
-                <div class="card-body p-0">
-                    <!-- Nested Row within Card Body -->
-                    <div class="row">
-                        <div class="col-lg-5 d-none d-lg-block bg-request-clean-image"></div>
-                        <div class="col-lg-7">
-                          <div class="p-5">
-                            <div class="text-center">
-                              <h1 class="h4 text-gray-900 mb-4">Need to schedule a clean?</h1>
-                              
-                              </div>
-                                
-                                <form action="/create_clean" method="POST"> 
-                                  <div class="row">
-                                    <div class="col-sm-9 form-group">
-                                      <label for="address" >Address:</label>
-                                      <select class="form-control" name="address_id" id="address_id">
-                                        <option value="">Select ...</option>
-                                        {% for address in user.address %}
-                                        <option value="{{ address.address_id }}">{{ address.street }}</option>
-                                        {% endfor %}
-                                      </select>
-                                    </div>
-                                    <div class="col-sm-3 text-center">
-                                      <a class="btn btn-secondary" href="/create_address">Add address</a>
-                                    </div>
-                                  </div>
-                              
-                              <div class="row">
-                                <div class="col-md-5">
-                                  <div class="md-form md-outline input-with-post-icon">
-                                    <input class="form-control" type="datetime-local" name="start_time" id="start_time" value="">                                
-                                  </div>
-                                </div>
-                                <div class="col-md-7 form-group">
-                                  <input type="text" class="form-control form-control-user"
-                                      placeholder="Add any details here"
-                                      id='request_clean' name="request_clean">
-                                </div>
-                              </div>
-                              <input type="submit" class="btn btn-primary btn-user btn-block" value="Submit Request">
-                            </form>
-                            <div class="text-center">
-                                <a class="small" href="/customer">Nevermind, take me back.</a>
-                            </div>
-                          </div>
-                        </div>
-                    </div>
+  <!-- Outer Row -->
+  <div class="row justify-content-center">
+    <div class="col-xl-12 col-lg-12 col-md-9">
+      <div class="card o-hidden border-0 shadow-lg my-5">
+        <div class="card-body p-0">
+          <!-- Nested Row within Card Body -->
+          <div class="row">
+            <div class="col-lg-5 d-none d-lg-block bg-request-clean-image"></div>
+            <div class="col-lg-7">
+              <div class="p-5">
+                <div class="text-center">
+                  <h1 class="h4 text-gray-900 mb-4">Need to schedule a clean?</h1>
+
                 </div>
+
+                <form action="/create_clean" method="POST">
+                  <div class="row">
+                    <div class="col-sm-9 form-group">
+                      <label for="address">Address:</label>
+                      <select class="form-control" name="address_id" id="address_id">
+                        <option value="">Select ...</option>
+                        {% for address in user.address %}
+                        <option value="{{ address.address_id }}">{{ address.street }}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <div class="col-sm-3 text-center">
+                      <a class="btn btn-secondary" href="/create_address">Add address</a>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-5">
+                      <div class="md-form md-outline input-with-post-icon">
+                        <input class="form-control" type="datetime-local" name="start_time" id="start_time" value="">
+                      </div>
+                    </div>
+                    <div class="col-md-7 form-group">
+                      <input type="text" class="form-control form-control-user" placeholder="Add any details here"
+                        id='request_clean' name="request_clean">
+                    </div>
+                  </div>
+                  <input type="submit" class="btn btn-primary btn-user btn-block" value="Submit Request">
+                </form>
+                <div class="text-center">
+                  <a class="small" href="/customer">Nevermind, take me back.</a>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 
 

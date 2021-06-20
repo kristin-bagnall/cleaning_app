@@ -1,7 +1,6 @@
 "use strict";
 
 // Navbar
-
 window.addEventListener('DOMContentLoaded', event => {
 
   // Navbar shrink function
@@ -21,7 +20,6 @@ window.addEventListener('DOMContentLoaded', event => {
   document.addEventListener('scroll', navbarShrink);
 
 });
-
 
 
 // Bend service area map
@@ -55,14 +53,12 @@ function initMap() {
 }
 
 
-
 // customer portal log out functionality
 const logOut = $('#log-out')
 
 logOut.on('click', () =>{
   fetch(`/logout`)
 })
-
 
 
 $('#reviewModal').on('show.bs.modal', (event) => {
