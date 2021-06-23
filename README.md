@@ -8,7 +8,7 @@ A good friend of mine has run a successful cleaning business for the last few ye
 Now she is looking to automate and scale her business.  This work will use technology to enable her to throw away that physical calendar, stop generating all invoices manually, and streamline that way she communicates with her clients and employees.
 
 ## Project Status
-- This project is live and available [here](https://www.youtube.com/watch?v=qfaIA26AYe8).
+- This project is live and available [here](http://www.jrcrystalcleaning.com/).
 
 - Check out the Demo video [here](https://www.youtube.com/watch?v=qfaIA26AYe8).
 
